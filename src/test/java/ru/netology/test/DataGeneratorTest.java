@@ -1,11 +1,12 @@
-package ru.netology;
+package ru.netology.test;
+
 
 import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
-import ru.netology.DataGenerator;
+import ru.netology.data.DataGenerator;
 
 import java.time.Duration;
 
@@ -13,7 +14,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
-class DeliveryTest {
+class DataGeneratorTest {
 
     @BeforeEach
     void setup() {
@@ -21,8 +22,8 @@ class DeliveryTest {
     }
 
     @Test
-    @DisplayName("Should successful plan and replan meeting")
-    void shouldSuccessfulPlanAndReplanMeeting() {
+    @DisplayName("Should successfully plan and replan meeting")
+    void shouldSuccessfullyPlanAndReplanMeeting() {
         var validUser = DataGenerator.Registration.generateUser("ru");
         var daysToAddForFirstMeeting = 4;
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
@@ -40,7 +41,8 @@ class DeliveryTest {
         $("[data-test-id='phone'] input").setValue(validUser.getPhone());
         $("[data-test-id='agreement']").click();
         $(byText("Запланировать")).click();
-        //$(byText("Успешно!")).click();
+        $(byText("Успешно!"))
+                .shouldBe(Condition.visible, Duration.ofSeconds(15));
         $("data-test-id='success-notification'] .notification__content")
                 .shouldBe(Condition.visible, Duration.ofSeconds(15))
                 .shouldHave(Condition.exactText("Встреча успешно запланирована на " + firstMeetingDate));
@@ -55,4 +57,5 @@ class DeliveryTest {
                 .shouldBe(Condition.visible, Duration.ofSeconds(15))
                 .shouldHave(Condition.exactText("Встреча успешно запланирована на " + secondMeetingDate));
     }
+
 }
